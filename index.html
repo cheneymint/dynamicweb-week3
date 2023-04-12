@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Random Image Generator</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #f2f2f2;
+		}
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+		}
+		.card {
+			margin: 10px;
+			border-radius: 10px;
+			box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+			cursor: pointer;
+			transition: transform 0.2s ease-in-out;
+		}
+		.card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+		}
+		.card img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: opacity 0.2s ease-in-out;
+		}
+		.card:hover img {
+			opacity: 0.8;
+		}
+	</style>
+</head>
+<body>
+	<div class="container"></div>
+
+	<script>
+		const accessKey = 'rzfxeaiR7cbvj3rtrmDDI38Vp6c_KFiebl_T0T6PGQo'; // Replace with your Unsplash API access key
+		const count = 20;
+		const orientation = 'landscape';
+		const apiUrl = `https://api.unsplash.com/photos/random/?client_id=${accessKey}&count=${count}&orientation=${orientation}`;
+
+		const container = document.querySelector('.container');
+
+		async function getImages() {
+			try {
+				const response = await fetch(apiUrl);
+				const images = await response.json();
+				showImages(images);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+
+		function showImages(images) {
+			images.forEach(image => {
+				const card = document.createElement('div');
+				card.classList.add('card');
+				card.innerHTML = `
+					<img src="${image.urls.regular}" alt="${image.alt_description}">
+				`;
+				container.appendChild(card);
+				card.addEventListener('click', () => {
+					window.location.href = image.links.html;
+				});
+			});
+		}
+
+		getImages();
+	</script>
+</body>
+</html>
